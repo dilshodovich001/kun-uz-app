@@ -2,8 +2,6 @@ package uz.kun.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import uz.kun.model.request.UserRequest;
 import uz.kun.model.response.UserResponse;
 import uz.kun.service.user.UserService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -50,45 +46,49 @@ public class UserController {
     //  Read all users
     @GetMapping("/list")
     public String getAllUsersList(Model model) {
-        List<UserResponse> users = userService.getAllUsers();
+        var users = userService.getAllUsers();
         model.addAttribute("users", users);
+
         return "user/users-list";
     }
 
     //  Update user page
-    @GetMapping("/edit/{userId}")
+    @GetMapping("/update/{userId}")
     public String editUser(
             @PathVariable Integer userId,
             Model model
     ) {
 
-        UserResponse userResponse = userService.getUser(userId);
-
-        UserRequest editUserRequest = UserRequest.builder()
-                .firstname(userResponse.getFirstname())
-                .lastname(userResponse.getLastname())
-                .email(userResponse.getEmail())
-                .username(userResponse.getUsername())
+        var user = userService.getUser(userId);
+        var updateUserRequest = UserRequest.builder()
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .email(user.getEmail())
+                .username(user.getUsername())
                 .build();
 
-        model.addAttribute("editUserRequest", editUserRequest);
+        model.addAttribute("updateUserRequest", updateUserRequest);
         model.addAttribute("userId", userId);
 
-        return "user/edit-user";
+        return "user/update-user";
     }
 
     // update user
-    @PostMapping("/edit/{userId}")
+    @PostMapping("/update/{userId}")
     public String editUser(
             @PathVariable Integer userId,
             @ModelAttribute("editUserRequest")
-            UserRequest userRequest
+            UserRequest userRequest,
+            BindingResult bindingResult
     ) {
+        if (bindingResult.hasErrors()) {
+            return "user/update-user";
+        }
+
         userService.updateUser(userId, userRequest);
         return "redirect:/user/list";
     }
 
-    //  delete user
     @GetMapping("/delete/{userId}")
     public String deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);

@@ -1,4 +1,4 @@
-package uz.kun.category;
+package uz.kun.model.response;
 
 import lombok.Builder;
 import lombok.Data;

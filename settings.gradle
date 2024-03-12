@@ -1,0 +1,5 @@
+rootProject.name = 'uz.kun'
+include 'application'
+include 'domain'
+include 'infrastructure'
+

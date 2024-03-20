@@ -1,1 +1,3 @@
 rootProject.name = 'kun-uz-app'
+include 'user-service'
+

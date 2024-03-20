@@ -1,0 +1,1 @@
+package uz.kun.userservice.domain.models.response;

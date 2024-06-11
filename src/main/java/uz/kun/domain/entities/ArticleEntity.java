@@ -64,7 +64,7 @@ public class ArticleEntity {
     private ArticleStatus status;
     @Column(name = "tag_list", columnDefinition = "integer[]")
     @ElementCollection
-    private List<Integer> tagList;
+    private Set<Integer> tagList;
     @Column(name = "published_date")
     private LocalDateTime publishedDate;
     @Column(name = "created_date")
